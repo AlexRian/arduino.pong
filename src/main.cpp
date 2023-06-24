@@ -10,9 +10,9 @@
 
 EncButton<EB_TICK, POWER_BUTTON_PIN> powerButton;
 
-Paddle firstPlayerpaddle{Position{2, 0}, FIRST_PLAYER_INPUT_PIN};
-Paddle secondPlayerpaddle{Position{126, 0}, SECOND_PLAYER_INPUT_PIN};
-Ball ball{Position{64, 32}};
+Paddle firstPlayerpaddle{{2, 0}, FIRST_PLAYER_INPUT_PIN};
+Paddle secondPlayerpaddle{{126, 0}, SECOND_PLAYER_INPUT_PIN};
+Ball ball{{64, 32}};
 Gamelogic gamelogic;
 
 void setup() {
@@ -41,6 +41,9 @@ void loop() {
 
   firstPlayerpaddle.draw();
   secondPlayerpaddle.draw();
+
+  ball.updatePosition();
+  ball.checkCollisions(firstPlayerpaddle, secondPlayerpaddle);
   ball.draw();
 
   display.display();
