@@ -3,6 +3,8 @@
 #include "graphics.h"
 #include "entities.h"
 #include "gamelogic.h"
+#include "sound.h"
+#include "indicator.h"
 
 #define POWER_BUTTON_PIN 3
 #define FIRST_PLAYER_INPUT_PIN A0
@@ -13,18 +15,14 @@ EncButton<EB_TICK, POWER_BUTTON_PIN> powerButton;
 Paddle firstPlayerpaddle{{2, 0}, FIRST_PLAYER_INPUT_PIN};
 Paddle secondPlayerpaddle{{126, 0}, SECOND_PLAYER_INPUT_PIN};
 Ball ball{{64, 32}};
-Gamelogic gamelogic;
+Sound sound(6);
+Indicator indicator(7, 8);
+
+Gamelogic gamelogic(sound, indicator);
 
 void setup() {
   Graphics::screenInit();
-
-  pinMode(8, OUTPUT);
-  pinMode(7, OUTPUT);
-
-  tone(6, 1000);
-  delay(500);
-  noTone(6);
-  delay(500);
+  sound.makeReadyBeep();
 
   Serial.begin(9600);
 }
@@ -43,7 +41,7 @@ void loop() {
   secondPlayerpaddle.draw();
 
   ball.updatePosition();
-  ball.checkCollisions(firstPlayerpaddle, secondPlayerpaddle);
+  gamelogic.checkCollisions(firstPlayerpaddle, secondPlayerpaddle, ball);
   ball.draw();
 
   display.display();
